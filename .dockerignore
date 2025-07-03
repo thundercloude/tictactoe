@@ -1,0 +1,11 @@
+# Add Docker ignore patterns
+node_modules
+npm-debug.log
+.git
+.gitignore
+README.md
+MULTIPLAYER_SETUP.md
+.env
+.nyc_output
+coverage
+.docker

@@ -1,0 +1,41 @@
+# Node.js
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# Logs
+logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.*
+
+# Docker
+*.pid
+
+# VSCode
+.vscode/
+
+# Build output
+dist/
+build/
+
+# Coverage
+coverage/
+
+# Misc
+*.tgz
+.idea/
+*.swp
+
+# Ignore local runtime files
+*.local
+
+# Ignore Docker artifacts
+*.tar

@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  tictactoe:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "node", "healthcheck.js"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.tictactoe.rule=Host(`tictactoe.localhost`)"
+      - "traefik.http.routers.tictactoe.entrypoints=web"

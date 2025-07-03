@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic Tac Toe - Echtzeit-Spiel</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎮 Tic Tac Toe</h1>
+            <div class="multiplayer-info" id="multiplayer-info">
+                <div class="connection-status">
+                    <span id="connection-status">🔴 Offline</span>
+                    <span id="room-info"></span>
+                </div>
+                <div class="players-info" id="players-info">
+                    <div class="player" id="player-x">Spieler X: <span>Warten...</span></div>
+                    <div class="player" id="player-o">Spieler O: <span>Warten...</span></div>
+                </div>
+            </div>
+            <div class="game-info">
+                <div class="current-player">
+                    Aktueller Spieler: <span id="current-player">X</span>
+                </div>
+                <div class="score">
+                    <span>X: <span id="score-x">0</span></span>
+                    <span>O: <span id="score-o">0</span></span>
+                    <span>Unentschieden: <span id="score-ties">0</span></span>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <div class="game-board" id="game-board">
+                <div class="cell" data-index="0"></div>
+                <div class="cell" data-index="1"></div>
+                <div class="cell" data-index="2"></div>
+                <div class="cell" data-index="3"></div>
+                <div class="cell" data-index="4"></div>
+                <div class="cell" data-index="5"></div>
+                <div class="cell" data-index="6"></div>
+                <div class="cell" data-index="7"></div>
+                <div class="cell" data-index="8"></div>
+            </div>
+
+            <div class="game-status" id="game-status">
+                Spieler X ist am Zug
+            </div>
+
+            <div class="game-controls">
+                <button id="reset-game" class="btn btn-secondary">Spiel zurücksetzen</button>
+                <button id="reset-score" class="btn btn-danger">Punkte zurücksetzen</button>
+                <button id="join-room" class="btn btn-primary">Raum beitreten/erstellen</button>
+                <button id="share-room" class="btn btn-success" style="display: none;">Raum teilen</button>
+            </div>
+        </main>
+
+        <div class="event-log">
+            <h3>📝 Spielereignisse</h3>
+            <div id="event-list" class="event-list"></div>
+        </div>
+    </div>
+
+    <div id="game-modal" class="modal">
+        <div class="modal-content">
+            <h2 id="modal-title">Spiel beendet</h2>
+            <p id="modal-message">Spieler X gewinnt!</p>
+            <button id="modal-close" class="btn btn-primary">Nochmal spielen</button>
+        </div>
+    </div>
+
+    <div id="room-modal" class="modal">
+        <div class="modal-content">
+            <h2>🌐 Raum beitreten/erstellen</h2>
+            <form id="room-form">
+                <div class="form-group">
+                    <label for="player-name">Ihr Name:</label>
+                    <input type="text" id="player-name" placeholder="Geben Sie Ihren Namen ein" required>
+                </div>
+                <div class="form-group">
+                    <label for="room-id">Raum-ID:</label>
+                    <input type="text" id="room-id" placeholder="Raum-ID eingeben oder leer lassen für zufällig">
+                </div>
+                <div class="form-buttons">
+                    <button type="submit" class="btn btn-primary">Raum beitreten</button>
+                    <button type="button" id="room-modal-close" class="btn btn-secondary">Abbrechen</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/multiplayer.js"></script>
+</body>
+</html>

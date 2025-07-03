@@ -1,0 +1,457 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #333;
+}
+
+.container {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    width: 100%;
+    margin: 1rem;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.game-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.current-player {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.current-player span {
+    color: #667eea;
+    font-size: 1.5rem;
+}
+
+.score {
+    display: flex;
+    gap: 1rem;
+    font-weight: bold;
+}
+
+.score span {
+    padding: 0.5rem 1rem;
+    background: #f8f9fa;
+    border-radius: 10px;
+    border: 2px solid #e9ecef;
+}
+
+.game-board {
+    display: grid;
+    grid-template-columns: repeat(3, 100px);
+    grid-template-rows: repeat(3, 100px);
+    grid-gap: 10px;
+    margin: 2rem auto;
+    width: 320px;
+    height: 320px;
+}
+
+.cell {
+    background: #f8f9fa;
+    border: 3px solid #e9ecef;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    width: 100px;
+    height: 100px;
+}
+
+.cell:hover {
+    background: #e9ecef;
+    transform: scale(1.05);
+    border-color: #667eea;
+}
+
+.cell.x {
+    color: #e74c3c;
+    background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+    color: white;
+    border-color: #e74c3c;
+}
+
+.cell.o {
+    color: #3498db;
+    background: linear-gradient(45deg, #74b9ff, #0984e3);
+    color: white;
+    border-color: #3498db;
+}
+
+.cell.winning {
+    animation: pulse 1s infinite;
+    box-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.game-status {
+    text-align: center;
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin: 1rem 0;
+    min-height: 2rem;
+    color: #667eea;
+}
+
+.game-controls {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin: 2rem 0;
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.btn-primary {
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    color: white;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #5a6268;
+    transform: translateY(-2px);
+}
+
+.btn-danger {
+    background: #dc3545;
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #c82333;
+    transform: translateY(-2px);
+}
+
+.event-log {
+    margin-top: 2rem;
+    border-top: 2px solid #e9ecef;
+    padding-top: 1rem;
+}
+
+.event-log h3 {
+    margin-bottom: 1rem;
+    color: #667eea;
+}
+
+.event-list {
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 0.5rem;
+    background: #f8f9fa;
+    border-radius: 10px;
+    border: 1px solid #e9ecef;
+}
+
+.event-item {
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+    background: white;
+    border-radius: 5px;
+    border-left: 4px solid #667eea;
+    font-size: 0.9rem;
+    animation: slideIn 0.3s ease;
+}
+
+.event-item.winner {
+    border-left-color: #28a745;
+    background: #d4edda;
+}
+
+.event-item.move {
+    border-left-color: #17a2b8;
+}
+
+.event-item.game-start {
+    border-left-color: #ffc107;
+    background: #fff3cd;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+    background-color: white;
+    margin: 15% auto;
+    padding: 2rem;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    animation: scaleIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+    from { 
+        opacity: 0;
+        transform: scale(0.5);
+    }
+    to { 
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.modal h2 {
+    color: #667eea;
+    margin-bottom: 1rem;
+}
+
+.modal p {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+}
+
+/* Multiplayer UI Styles */
+.multiplayer-info {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 10px;
+    border: 2px solid #e9ecef;
+}
+
+.connection-status {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+.connection-status #connection-status {
+    font-size: 0.9rem;
+}
+
+.connection-status .connected {
+    color: #28a745;
+}
+
+.connection-status .disconnected {
+    color: #dc3545;
+}
+
+.players-info {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.player {
+    flex: 1;
+    padding: 0.5rem;
+    background: white;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: bold;
+    border: 2px solid #e9ecef;
+}
+
+.player.active {
+    border-color: #667eea;
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    color: white;
+}
+
+.player.you {
+    border-color: #28a745;
+    background: #d4edda;
+}
+
+/* Room Modal Styles */
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid #e9ecef;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.form-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.btn-success {
+    background: #28a745;
+    color: white;
+}
+
+.btn-success:hover {
+    background: #218838;
+    transform: translateY(-2px);
+}
+
+/* Disabled state for cells when not player's turn */
+.cell.disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.cell.disabled:hover {
+    background: #f8f9fa;
+    transform: none;
+    border-color: #e9ecef;
+}
+
+/* Spectator mode indicator */
+.spectator-mode {
+    background: #fff3cd;
+    border: 2px solid #ffc107;
+    color: #856404;
+    padding: 0.5rem;
+    border-radius: 5px;
+    text-align: center;
+    margin-bottom: 1rem;
+    font-weight: bold;
+}
+
+/* Waiting for players indicator */
+.waiting-players {
+    background: #d1ecf1;
+    border: 2px solid #17a2b8;
+    color: #0c5460;
+    padding: 1rem;
+    border-radius: 10px;
+    text-align: center;
+    margin: 1rem 0;
+    font-weight: bold;
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+    .container {
+        padding: 1rem;
+        margin: 0.5rem;
+    }
+    
+    h1 {
+        font-size: 2rem;
+    }
+    
+    .game-info {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .cell {
+        font-size: 2rem;
+    }
+    
+    .game-controls {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .btn {
+        width: 100%;
+        max-width: 200px;
+    }
+}
