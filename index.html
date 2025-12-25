@@ -9,28 +9,56 @@
 <body>
     <div class="container">
         <header>
-            <h1>🎮 Tic Tac Toe</h1>
-            <div class="multiplayer-info" id="multiplayer-info">
-                <div class="connection-status">
+            <div class="app-header">
+                <h1 class="app-logo">
+                    <span class="logo-icon">🎮</span>
+                    <span class="logo-text">Tic Tac Toe</span>
+                </h1>
+                <div class="connection-status-pill">
                     <span id="connection-status">
                         <span class="status-dot offline"></span>
                         <span class="status-text">Offline</span>
                     </span>
                     <span id="room-info"></span>
                 </div>
-                <div class="players-info" id="players-info">
-                    <div class="player" id="player-x">Spieler X: <span>Warten...</span></div>
-                    <div class="player" id="player-o">Spieler O: <span>Warten...</span></div>
-                </div>
             </div>
-            <div class="game-info">
-                <div class="current-player">
-                    Aktueller Spieler: <span id="current-player">X</span>
+
+            <div class="game-dashboard">
+                <div id="players-info" class="players-container">
+                    <!-- Player X -->
+                    <div class="player-wrapper">
+                        <div class="player-card" id="player-x">Spieler X: <span>Warten...</span></div>
+                        <div class="stats-pill x-stats">
+                            <span class="stat-label">X</span>
+                            <span class="stat-value" id="score-x">0</span>
+                        </div>
+                    </div>
+
+                    <!-- VS / Stats -->
+                    <div class="center-stats">
+                        <div class="vs-badge">VS</div>
+                        <div class="ties-pill">
+                            <span class="stat-label">Remis</span>
+                            <span class="stat-value" id="score-ties">0</span>
+                        </div>
+                    </div>
+
+                    <!-- Player O -->
+                    <div class="player-wrapper">
+                        <div class="player-card" id="player-o">Spieler O: <span>Warten...</span></div>
+                        <div class="stats-pill o-stats">
+                            <span class="stat-label">O</span>
+                            <span class="stat-value" id="score-o">0</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="score">
-                    <span>X: <span id="score-x">0</span></span>
-                    <span>O: <span id="score-o">0</span></span>
-                    <span>Unentschieden: <span id="score-ties">0</span></span>
+
+                <div class="game-status-bar">
+                    <div id="game-status" class="main-status">Spieler X ist am Zug</div>
+                    <!-- Hidden current player span to satisfy JS but not show duplicate UI -->
+                    <div class="current-turn-indicator" style="display:none;">
+                        <span id="current-player">X</span>
+                    </div>
                 </div>
             </div>
         </header>
@@ -46,10 +74,6 @@
                 <div class="cell" data-index="6"></div>
                 <div class="cell" data-index="7"></div>
                 <div class="cell" data-index="8"></div>
-            </div>
-
-            <div class="game-status" id="game-status">
-                Spieler X ist am Zug
             </div>
 
             <div class="game-controls">
