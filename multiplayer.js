@@ -14,11 +14,12 @@ class MultiplayerTicTacToe {
         this.isMyTurn = false;
         this.isSpectator = false;
         this.opponentInfo = null;
+        this.pingInterval = null;
         
         this.initializeGame();
         this.bindEvents();
         this.checkForRoomInUrl();
-        this.addEvent('Spiel geladen! Klicken Sie auf "Raum beitreten/erstellen" um mit einem Freund zu spielen.', 'game-start');
+        this.addEvent(t('Click "Join/Create Room" to start playing with a friend'), 'game-start');
     }
 
     initializeGame() {
@@ -92,6 +93,8 @@ class MultiplayerTicTacToe {
 
     // WebSocket Connection Methods
     connectToServer() {
+        if (this.pingInterval) clearInterval(this.pingInterval);
+
         const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
         const wsUrl = `${protocol}//${window.location.host}`;
         
@@ -99,10 +102,10 @@ class MultiplayerTicTacToe {
         this.ws = new WebSocket(wsUrl);
         
         this.ws.onopen = () => {
-            console.log('Mit Server verbunden');
+            console.log('Connected to server');
             this.isConnected = true;
             this.updateConnectionStatus(true);
-            this.addEvent('✅ Mit Server verbunden', 'success');
+            this.addEvent('✅ ' + t('Connected'), 'success');
         };
 
         this.ws.onmessage = (event) => {
@@ -111,15 +114,16 @@ class MultiplayerTicTacToe {
         };
 
         this.ws.onclose = () => {
-            console.log('Vom Server getrennt');
+            console.log('Disconnected from server');
             this.isConnected = false;
             this.updateConnectionStatus(false);
-            this.addEvent('❌ Verbindung zum Server getrennt', 'error');
+            if (this.pingInterval) clearInterval(this.pingInterval);
+            this.addEvent('❌ ' + t('Disconnected from server'), 'error');
             
             // Attempt to reconnect after 3 seconds
             setTimeout(() => {
                 if (!this.isConnected && this.roomId) {
-                    this.addEvent('🔄 Versuche Verbindung wiederherzustellen...', 'info');
+                    this.addEvent('🔄 ' + t('Attempting to reconnect...'), 'info');
                     this.connectToServer();
                 }
             }, 3000);
@@ -127,11 +131,11 @@ class MultiplayerTicTacToe {
 
         this.ws.onerror = (error) => {
             console.error('WebSocket error:', error);
-            this.addEvent('❌ Connection error', 'error');
+            this.addEvent('❌ ' + t('Connection error'), 'error');
         };
 
         // Send ping every 30 seconds to keep connection alive
-        setInterval(() => {
+        this.pingInterval = setInterval(() => {
             if (this.isConnected && this.ws.readyState === WebSocket.OPEN) {
                 this.ws.send(JSON.stringify({ type: 'ping' }));
             }
@@ -192,7 +196,7 @@ class MultiplayerTicTacToe {
         let roomId = document.getElementById('room-id').value.trim();
         
         if (!playerName) {
-            alert('Bitte geben Sie Ihren Namen ein');
+            alert(t('Please enter your name'));
             return;
         }
 
@@ -237,8 +241,8 @@ class MultiplayerTicTacToe {
         
         if (navigator.clipboard && navigator.clipboard.writeText) {
             navigator.clipboard.writeText(url).then(() => {
-                this.addEvent('🔗 Raum-Link in Zwischenablage kopiert!', 'info');
-                alert('Raum-Link wurde in die Zwischenablage kopiert!\n\n' + url);
+                this.addEvent('🔗 ' + t('Room link copied to clipboard!'), 'info');
+                alert(t('Room link copied to clipboard!') + '\n\n' + url);
             }).catch(() => {
                 this.fallbackCopyTextToClipboard(url);
             });
@@ -260,8 +264,8 @@ class MultiplayerTicTacToe {
         try {
             const successful = document.execCommand('copy');
             if (successful) {
-                this.addEvent('🔗 Raum-Link in Zwischenablage kopiert!', 'info');
-                alert('Raum-Link wurde in die Zwischenablage kopiert!\n\n' + text);
+                this.addEvent('🔗 ' + t('Room link copied to clipboard!'), 'info');
+                alert(t('Room link copied to clipboard!') + '\n\n' + text);
             } else {
                 this.showUrlDialog(text);
             }
@@ -274,8 +278,8 @@ class MultiplayerTicTacToe {
     }
 
     showUrlDialog(url) {
-        alert('Teilen Sie diesen Link mit Ihrem Freund:\n\n' + url);
-        this.addEvent('🔗 Raum-Link bereit zum Teilen', 'info');
+        alert(t('Share the room link with your friend') + ':\n\n' + url);
+        this.addEvent('🔗 ' + t('Share the room link with your friend'), 'info');
     }
 
     // Game Event Handlers
@@ -290,7 +294,7 @@ class MultiplayerTicTacToe {
     }
 
     handlePlayerJoined(data) {
-        this.addEvent(`👋 ${data.player.name} joined as Player ${data.player.symbol}`, 'info');
+        this.addEvent(`👋 ${data.player.name} ${t('joined as Player')} ${data.player.symbol}`, 'info');
         this.updateGameState(data.gameState);
     }
 
@@ -299,7 +303,7 @@ class MultiplayerTicTacToe {
     }
 
     handleGameReady(data) {
-        this.addEvent('🎮 Both players connected! Game is ready to start.', 'success');
+        this.addEvent('🎮 ' + t('Both players connected! Game is ready to start.'), 'success');
         this.updateGameState(data.gameState);
         this.gameActive = true;
         this.checkMyTurn();
@@ -317,7 +321,7 @@ class MultiplayerTicTacToe {
         
         const playerSymbol = data.player;
         const position = data.position + 1;
-        this.addEvent(`🎯 Player ${playerSymbol} moved to position ${position}`, 'move');
+        this.addEvent(`🎯 ${t('Player X').replace('X', playerSymbol)} ${t('moved to position')} ${position}`, 'move');
         
         if (data.gameStatus === 'win') {
             this.handleGameEnd('win', data.winner);
@@ -337,28 +341,28 @@ class MultiplayerTicTacToe {
         });
         
         this.updateCurrentPlayerDisplay();
-        this.updateGameStatus("Spieler X ist am Zug");
+        this.updateGameStatus(t('Player X\'s turn'));
         this.closeGameModal();
         this.checkMyTurn();
         
-        this.addEvent('🔄 Game reset by a player', 'info');
+        this.addEvent('🔄 ' + t('Game reset by a player'), 'info');
     }
 
     handleScoreReset(data) {
         this.score = data.score;
         this.updateScoreDisplay();
-        this.addEvent('📊 Score reset by a player', 'info');
+        this.addEvent('📊 ' + t('Score reset by a player'), 'info');
     }
 
     handleSpectatorMode(data) {
         this.isSpectator = true;
         this.updateGameState(data.gameState);
-        this.addEvent('👁️ Joined as spectator - watching the game', 'info');
+        this.addEvent('👁️ ' + t('Joined as spectator - watching the game'), 'info');
         
         // Add spectator indicator
         const spectatorIndicator = document.createElement('div');
         spectatorIndicator.className = 'spectator-mode';
-        spectatorIndicator.textContent = '👁️ Spectator Mode - You are watching this game';
+        spectatorIndicator.textContent = '👁️ ' + t('Joined as spectator - watching the game'); 
         document.querySelector('.container').insertBefore(spectatorIndicator, document.querySelector('main'));
     }
 
@@ -392,26 +396,37 @@ class MultiplayerTicTacToe {
         
         if (result === 'win') {
             const isMyWin = winner === this.playerInfo?.symbol;
-            const message = isMyWin ? '🎉 You won!' : `😔 Player ${winner} won!`;
-            this.updateGameStatus(`🎉 Player ${winner} wins!`);
-            this.addEvent(`🏆 Player ${winner} wins the game!`, 'winner');
-            this.showGameModal('🎉 Game Over!', message);
+            const message = isMyWin ? '🎉 ' + t('You won!') : `😔 ${t('Player X').replace('X', winner)} ${t('wins!')}`;
+            this.updateGameStatus(`🎉 ${t('Player X').replace('X', winner)} ${t('wins!')}`);
+            this.addEvent(`🏆 ${t('Player X').replace('X', winner)} ${t('wins the game!')}`, 'winner');
+            this.showGameModal('🎉 ' + t('Game Over!'), message);
         } else {
-            this.updateGameStatus("🤝 It's a tie!");
-            this.addEvent("🤝 Game ended in a tie!", 'winner');
-            this.showGameModal('🤝 Tie Game!', "It's a tie! Good game!");
+            this.updateGameStatus("🤝 " + t('It\'s a tie!'));
+            this.addEvent("🤝 " + t('Game ended in a tie!'), 'winner');
+            this.showGameModal('🤝 ' + t('Tie Game!'), t('It\'s a tie!') + ' ' + t('Good game!'));
         }
     }
 
     // UI Update Methods
     updateConnectionStatus(connected) {
-        const status = this.connectionStatus;
+        const statusContainer = this.connectionStatus;
+        const dot = statusContainer.querySelector('.status-dot');
+        const text = statusContainer.querySelector('.status-text');
+        
         if (connected) {
-            status.textContent = '🟢 Verbunden';
-            status.className = 'connected';
+            if (text) text.textContent = 'Verbunden';
+            if (dot) {
+                dot.className = 'status-dot online';
+            }
+            statusContainer.classList.remove('disconnected');
+            statusContainer.classList.add('connected');
         } else {
-            status.textContent = '🔴 Offline';
-            status.className = 'disconnected';
+            if (text) text.textContent = 'Offline';
+            if (dot) {
+                dot.className = 'status-dot offline';
+            }
+            statusContainer.classList.remove('connected');
+            statusContainer.classList.add('disconnected');
         }
     }
 

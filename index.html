@@ -12,7 +12,10 @@
             <h1>🎮 Tic Tac Toe</h1>
             <div class="multiplayer-info" id="multiplayer-info">
                 <div class="connection-status">
-                    <span id="connection-status">🔴 Offline</span>
+                    <span id="connection-status">
+                        <span class="status-dot offline"></span>
+                        <span class="status-text">Offline</span>
+                    </span>
                     <span id="room-info"></span>
                 </div>
                 <div class="players-info" id="players-info">
@@ -91,6 +94,7 @@
         </div>
     </div>
 
+    <script src="/translations.js"></script>
     <script src="/multiplayer.js"></script>
 </body>
 </html>

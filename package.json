@@ -5,17 +5,25 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "lint": "eslint .",
+    "test": "echo \"Error: no test specified\" && exit 0"
   },
   "dependencies": {
-    "ws": "^8.18.0",
     "express": "^4.19.2",
-    "uuid": "^10.0.0"
+    "uuid": "^10.0.0",
+    "ws": "^8.18.0"
   },
   "devDependencies": {
+    "eslint": "^9.39.2",
     "nodemon": "^3.1.4"
   },
-  "keywords": ["tictactoe", "multiplayer", "websocket", "realtime"],
+  "keywords": [
+    "tictactoe",
+    "multiplayer",
+    "websocket",
+    "realtime"
+  ],
   "author": "Your Name",
   "license": "MIT"
 }

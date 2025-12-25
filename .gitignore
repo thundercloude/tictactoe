@@ -8,6 +8,10 @@ yarn-error.log
 logs
 *.log
 
+# Markdown editor files
+*.mdx
+*.md
+
 # OS
 .DS_Store
 Thumbs.db
