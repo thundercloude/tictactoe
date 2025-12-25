@@ -15,11 +15,18 @@ class MultiplayerTicTacToe {
         this.isSpectator = false;
         this.opponentInfo = null;
         this.pingInterval = null;
+        this.players = [];
         
         this.initializeGame();
         this.bindEvents();
         this.checkForRoomInUrl();
         this.addEvent(t('Click "Join/Create Room" to start playing with a friend'), 'game-start');
+    }
+
+    getPlayerName(symbol) {
+        if (!this.players || this.players.length === 0) return `Player ${symbol}`;
+        const player = this.players.find(p => p.symbol === symbol);
+        return player ? player.name : `Player ${symbol}`;
     }
 
     initializeGame() {
@@ -320,8 +327,9 @@ class MultiplayerTicTacToe {
         this.checkMyTurn();
         
         const playerSymbol = data.player;
+        const playerName = this.getPlayerName(playerSymbol);
         const position = data.position + 1;
-        this.addEvent(`🎯 ${t('Player X').replace('X', playerSymbol)} ${t('moved to position')} ${position}`, 'move');
+        this.addEvent(`🎯 ${playerName} ${t('moved to position')} ${position}`, 'move');
         
         if (data.gameStatus === 'win') {
             this.handleGameEnd('win', data.winner);
@@ -396,9 +404,11 @@ class MultiplayerTicTacToe {
         
         if (result === 'win') {
             const isMyWin = winner === this.playerInfo?.symbol;
-            const message = isMyWin ? '🎉 ' + t('You won!') : `😔 ${t('Player X').replace('X', winner)} ${t('wins!')}`;
-            this.updateGameStatus(`🎉 ${t('Player X').replace('X', winner)} ${t('wins!')}`);
-            this.addEvent(`🏆 ${t('Player X').replace('X', winner)} ${t('wins the game!')}`, 'winner');
+            const winnerName = this.getPlayerName(winner);
+            
+            const message = isMyWin ? '🎉 ' + t('You won!') : `😔 ${winnerName} ${t('wins!')}`;
+            this.updateGameStatus(`🎉 ${winnerName} ${t('wins!')}`);
+            this.addEvent(`🏆 ${winnerName} ${t('wins the game!')}`, 'winner');
             this.showGameModal('🎉 ' + t('Game Over!'), message);
         } else {
             this.updateGameStatus("🤝 " + t('It\'s a tie!'));
@@ -443,6 +453,7 @@ class MultiplayerTicTacToe {
         this.currentPlayer = gameState.currentPlayer;
         this.gameActive = gameState.gameActive;
         this.score = gameState.score;
+        this.players = gameState.players || [];
         
         this.updateBoardDisplay();
         this.updateCurrentPlayerDisplay();
@@ -585,7 +596,7 @@ class MultiplayerTicTacToe {
 
 // Initialize the multiplayer game when the page loads
 document.addEventListener('DOMContentLoaded', () => {
-    const game = new MultiplayerTicTacToe();
+    new MultiplayerTicTacToe();
     
     console.log('🎮 Multiplayer Tic Tac Toe initialized!');
     console.log('💡 Tips:');

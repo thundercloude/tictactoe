@@ -8,7 +8,9 @@ module.exports = [
             globals: {
                 ...globals.browser,
                 ...globals.node,
-                ...globals.commonjs
+                ...globals.commonjs,
+                t: "readonly",
+                MultiplayerTicTacToe: "readonly"
             },
             ecmaVersion: "latest",
             sourceType: "commonjs"
