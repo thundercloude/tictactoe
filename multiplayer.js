@@ -56,7 +56,7 @@ class MultiplayerTicTacToe {
         // Button events
         document.getElementById('reset-game').addEventListener('click', () => this.resetGame());
         document.getElementById('reset-score').addEventListener('click', () => this.resetScore());
-        document.getElementById('modal-close').addEventListener('click', () => this.closeGameModal());
+        document.getElementById('modal-close').addEventListener('click', () => this.resetGame());
         document.getElementById('join-room').addEventListener('click', () => this.showRoomModal());
         document.getElementById('share-room').addEventListener('click', () => this.shareRoom());
         document.getElementById('room-modal-close').addEventListener('click', () => this.closeRoomModal());
